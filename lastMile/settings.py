@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+import os
+from dotenv import load_dotenv
+# load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,14 +25,119 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure--f+k*ef4j&t#u64r5)3kdsxtjx@ha_&vas7e80ekiocd2vic6u'
+# SECRET_KEY = os.environ.get("RDS_SECRET_NAME")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
-# Application definition
+import boto3
+from botocore.exceptions import ClientError
+import json
+import os
+# session = boto3.session.Session()
+# client = session.client(service_name='secretsmanager', region_name='us-west-2')
+
+# # Retrieve RDS credentials from AWS Secrets Manager
+# get_secret_value_response = client.get_secret_value(SecretId='rds!cluster-bcbf87b1-2088-4036-bf5c-4c6d96d1042c')
+# rds_credentials = json.loads(get_secret_value_response['SecretString'])
+
+
+
+# # Application definition
+# rds_client = boto3.client('rds',region_name='us-west-2')
+
+#     # Describe RDS instances
+# response = rds_client.describe_db_instances()
+
+#     # Process the response
+# instances = response['DBInstances']
+# print(instances)
+# for instance in instances:
+#         print(f"Instance Identifier: {instance['DBInstanceIdentifier']}")
+#         print(f"Engine: {instance['Engine']}")
+#         print(f"Status: {instance['DBInstanceStatus']}")
+#         print(f"Endpoint: {instance['Endpoint']['Address']}:{instance['Endpoint']['Port']}")
+#         print()
+# Initialize the RDS client
+
+print(os.getenv('AWS_ACCESS_KEY_ID'))
+# print(os.environ)
+os.environ['AWS_DEFAULT_REGION'] = 'uw-west-2'
+rds_client = boto3.client('rds')
+
+##
+
+import boto3
+from botocore.exceptions import ClientError
+
+
+def get_secret():
+    # secret_name = "rds-db-credentials/databaseaudit/amazon/1712009767156"
+    secret_name= "test"
+    region_name = "us-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    secret = get_secret_value_response['SecretString']
+
+    # Parse the secret JSON string to extract database credentials
+    import json
+    secret_dict = json.loads(secret)
+    print(secret_dict)
+    # username = secret_dict['username']
+    username = secret_dict['username']
+    password = secret_dict['password']
+    hostname = 'test.chwugwgcq0uu.us-west-2.rds.amazonaws.com'
+    port = '5432'
+    dbname = 'postgres'
+
+    # Establish a connection to the RDS instance using the retrieved credentials
+    import psycopg2
+    try:
+        conn = psycopg2.connect(
+            dbname=dbname,
+            user=username,
+            password=password,
+            host=hostname,
+            port=port
+        )
+        print("Connection to RDS instance successful!")
+        return conn
+    except Exception as e:
+        print("Error:", e)
+        raise e
+
+
+get_secret()
+##
+
+# print(rds_client)
+# # Get information about your RDS instance
+# response = rds_client.describe_db_instances(DBInstanceIdentifier='databaseaudit')
+
+# print(response)
+# # Extract endpoint address
+# endpoint_address = response['DBInstances'][0]['Endpoint']['Address']
+
+# print("RDS Endpoint Address:", endpoint_address)
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,7 +146,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'my_app'
+    'my_app',
+   'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +165,7 @@ ROOT_URLCONF = 'my_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/Users/stlp/Desktop/amazon/.venv/lib/python3.10/site-packages/drf_yasg/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,12 +184,24 @@ WSGI_APPLICATION = 'lastMile.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# print(rds_credentials)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'postgres',
+        # 'USER': 'test',
+        # 'PASSWORD': 'qwerty1234',
+        # 'HOST':'test.chwugwgcq0uu.us-west-2.rds.amazonaws.com',
+        # 'PORT':'5432',
+    #     hostname = 'test.chwugwgcq0uu.us-west-2.rds.amazonaws.com'
+    # port = '5432'
+    # dbname = 'postgres'
     }
 }
+
+## 
+#aws access key- AKIAZI2LFLFOWRWJLPGO
+# secret access key- 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
 
 
 # Password validation
@@ -122,3 +244,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+

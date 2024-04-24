@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure--f+k*ef4j&t#u64r5)3kdsxtjx@ha_&vas7e80ekiocd2vic6u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['10.19.128.82', 'localhost', '127.0.0.1',"*"]
 
 
 import boto3
@@ -125,7 +125,8 @@ def get_secret():
         raise e
 
 
-get_secret()
+# get_secret()
+
 ##
 
 # print(rds_client)
@@ -148,20 +149,29 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'my_app',
    'drf_yasg',
+   'corsheaders',
+#    'my_app.data_process'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'my_app.urls'
-
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_USE_SESSIONS=False
+CORS_ALLOWED_ORIGINS = [
+    "http://10.19.128.82:3000",
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -185,17 +195,20 @@ WSGI_APPLICATION = 'lastMile.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # print(rds_credentials)
+print(os.environ)
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql',
         # 'NAME': 'postgres',
-        # 'USER': 'test',
+        # 'USER': 'postgres',
         # 'PASSWORD': 'qwerty1234',
-        # 'HOST':'test.chwugwgcq0uu.us-west-2.rds.amazonaws.com',
-        # 'PORT':'5432',
-    #     hostname = 'test.chwugwgcq0uu.us-west-2.rds.amazonaws.com'
-    # port = '5432'
-    # dbname = 'postgres'
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        # 'PASSWORD': 'test',
+        'PASSWORD': 'postgres',
+        'HOST':'devsanyam.chwugwgcq0uu.us-west-2.rds.amazonaws.com',
+        # 'HOST':'localhost',
+        'PORT':'5432',
     }
 }
 
@@ -244,5 +257,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 

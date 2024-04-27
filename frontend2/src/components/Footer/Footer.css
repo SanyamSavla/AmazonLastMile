@@ -1,0 +1,46 @@
+.footer {
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+  text-align: right;
+}
+
+.button {
+  padding: 10px 15px;
+  margin-right: 5px;
+  border: none;
+  color: white;
+  background-color: #5c5c5c; /* Adjust color to match wireframe */
+  cursor: pointer;
+}
+
+.button-primary {
+  background-color: #ff9900; /* Adjust color to match wireframe */
+}
+
+.button-danger {
+  background-color: #d9534f; /* Adjust color to match wireframe */
+}
+
+.button:disabled {
+  background-color: #cccccc;
+}
+
+/* ... existing styles ... */
+
+/* Update button colors to match the wireframe */
+.button-primary {
+  background-color: orange; /* Use the exact color code from the wireframe if available */
+}
+
+.button-danger {
+  background-color: red; /* Use the exact color code from the wireframe if available */
+}
+
+/* Update hover effect for buttons */
+.button:hover {
+  opacity: 0.8;
+}
+
+/* ... other styles ... */
+

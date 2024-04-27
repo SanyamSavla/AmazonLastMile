@@ -1,0 +1,57 @@
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: #fff;
+}
+
+.audit-table th, .audit-table td {
+  border: 1px solid #ddd; /* Ensure this applies to both th and td */
+  padding: 8px;
+  text-align: left;
+}
+
+.audit-table th {
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.input, .checkbox {
+  /* Previous styles remain unchanged */
+}
+
+
+.input {
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  width: 100%;
+}
+
+.checkbox {
+  margin-left: 12px;
+}
+
+.status-cell {
+  text-align: center;
+}
+
+/* ... existing styles ... */
+
+/* Style the headers to match the wireframe */
+.audit-table th {
+  background-color: #F9F9F9; /* Light grey background */
+  color: #333; /* Dark text for contrast */
+}
+
+/* Style the inputs to match the wireframe */
+.input {
+  border: 2px solid #D3D3D3; /* Lighter border color */
+}
+
+/* Ensure the checkbox aligns with the design */
+.checkbox {
+  /* other styles */
+  accent-color: orange; /* Adjust the color to match wireframe, this colors the checkbox */
+}
+
+/* ... other styles ... */

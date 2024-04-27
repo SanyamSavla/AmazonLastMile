@@ -1,0 +1,47 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    /* Adjust the height as needed to match your logo's size */
+  }
+  
+  .logo {
+    height: 30px; /* Adjust as needed based on your actual logo size */
+  }
+  
+  .navigation-items ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    background: #232f3e; /* Dark blue background */
+    color: white;
+  }
+  
+  .navigation-items li {
+    padding: 1rem;
+    cursor: pointer;
+  }
+  
+  .header-section {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f0f0f0; /* Light gray background */
+  }
+  
+  .header-section h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #333; /* Dark gray text */
+  }
+  
+  /* You can add media queries for responsiveness as needed */
+  

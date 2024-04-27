@@ -1,0 +1,31 @@
+.navigation {
+  display: flex;
+  justify-content: center;
+  background: #fff;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
+}
+
+.nav-item:hover,
+.nav-active {
+  background-color: #f0f0f0;
+
+/* ... existing styles ... */
+
+/* Style the active tab to have an underline or a different background to indicate it's active */
+.nav-item.nav-active {
+  border-bottom: 3px solid orange; /* Adjust color to match wireframe */
+}
+
+/* ... other styles ... */
+
+}

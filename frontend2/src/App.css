@@ -1,0 +1,117 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #ececec;
+}
+
+/* Main layout styling */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  display: flex; /* If you have a sidebar */
+}
+
+.sidebar {
+  width: 250px; /* Adjust as needed */
+  background: #f0f0f0;
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.main {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Header styles */
+.header {
+  background-color: #fff;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Add other global or shared styles here */
+/* Table styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f9f9f9;
+}
+
+/* Input styles */
+.input {
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  width: 100%;
+}
+
+.checkbox {
+  margin-left: 12px; /* Center checkbox in the cell */
+}
+
+/* Button styles */
+.button {
+  padding: 10px 15px;
+  margin-right: 5px;
+  border: none;
+  color: white;
+  background-color: #5c5c5c; /* Adjust color to match wireframe */
+  cursor: pointer;
+}
+
+.button-primary {
+  background-color: #ff9900; /* Adjust color to match wireframe */
+}
+
+.button-danger {
+  background-color: #d9534f; /* Adjust color to match wireframe */
+}
+
+.button:disabled {
+  background-color: #cccccc;
+}
+
+/* Footer styles */
+.footer {
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+  text-align: right;
+}
+
+/* Misc */
+.hidden {
+  display: none;
+}
+
+/* Add responsive design as needed */
+@media (max-width: 768px) {
+  /* Adjust styles for smaller screens */
+
+  /* ... existing styles ... */
+
+/* Set the background color for the entire app to match the wireframe */
+.App {
+  background-color: #F5F5F5; /* Adjust the background color as per wireframe */
+}
+
+/* ... other styles ... */
+
+}
+

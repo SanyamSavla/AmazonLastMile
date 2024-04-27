@@ -138,14 +138,94 @@ const AuditPage = () => {
     // Logic to hold deployment
   };
 
-  const handleSave = () => {
-    // Logic to save data
-  };
+  // const handleSave = () => {
+  //   // Logic to save data
+  // };
 
   const handleComplete = () => {
     // Logic to mark as complete
   };
 
+  const handleSubmit = async (attributeData) => {
+    var csrfToken = getCookie('csrftoken');
+    try {
+      
+      const response = await fetch(`http://localhost:8000/discrepancy/${siteId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+          // Include CSRF token if needed, see previous examples
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          site_code: siteId, // Assuming siteId is stored in component state
+          ...attributeData, // This contains new_value, comments, and flagAsKDI
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      // Handle the response - e.g., show a success message, update state, etc.
+      console.log(result);
+
+    } catch (error) {
+      console.error('There has been a problem with your POST operation:', error);
+    }
+  };
+
+  const [formData, setFormData] = useState({});
+
+  const handleInputChange = (index, field, value) => {
+    // Update the specific item by index
+    setData(currentData =>
+      currentData.map((item, itemIndex) =>
+        index === itemIndex ? { ...item, [field]: value } : item
+      )
+    );
+  };
+  
+  const handleSave = async () => {
+    // Map your state to the format expected by your API
+     const payload = data.map(item => ({
+      primary_site_code: siteId, // This assumes the siteId is consistent for all items
+      attribute: item.attribute,
+      actualValue: item.actualValue,
+      comments: item.comments,
+      flagAsKDI: item.flagAsKDI,
+    }));
+    console.log("payload data:",payload)
+    // Perform the POST request to your API endpoint
+    try {
+      const response = await fetch(`http://localhost:8000/discrepancy/${siteId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+          // Include CSRF token if needed, see previous examples
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      // Handle success response
+      const result = await response.json();
+      console.log(result);
+      // TODO: Add any post-save actions here, e.g., notifications to the user
+      
+    } catch (error) {
+      // Handle errors
+      console.error('Error saving discrepancies:', error);
+      // TODO: Add error handling UI feedback here
+    }
+  };
   // return (
   //   <>
       // <Header />
@@ -157,17 +237,33 @@ const AuditPage = () => {
   //     {/* ... */}
   //   </>
   // );
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
   return (
     <>
       <Header />
-      {/* <Navigation tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} /> */}
+      {/* <Navigation tabs={tabs} activeTab={activeTab} setAciiitiveTab={setActiveTab} /> */}
       <Navigation tabs={tabs} activeTab={activeModule} onTabClick={handleTabClick} />
       
       <div className="content">
         {/* Pass the data array directly to the Table component */}
-        <Table data={data} setData={setData} />
+        <Table data={data} setData={setData} onInputChange={handleInputChange} />
       </div>
-      <Footer />
+      <Footer handleSave={handleSave}/>
     </>
   );
 };

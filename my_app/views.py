@@ -5,11 +5,14 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
 from django.http import JsonResponse
-from .models3 import Attributes
-
+from .models3 import Attributes,Discrepency
 from django.db import connection
 
 from django.shortcuts import redirect
+
+from django.utils import timezone
+import json
+from django.http import JsonResponse
 
 def home(request):
     # posts = Post.objects.all()
@@ -66,6 +69,7 @@ def get_users(request,site_id):
 #  routes for get request for values for 
 
 
+     
 @api_view(['POST'])
 # @require_POST
 def handle_site_id(request,site_id):
@@ -100,5 +104,66 @@ def handle_site_id(request,site_id):
     #     else:
     #         return JsonResponse({'error': 'Site ID not found'}, status=400)
 
+from django.db import transaction
+import uuid
+@api_view(['POST'])
+def update_audit_log(request,site_id):
+    if request.method == 'POST':
+        # Parse the JSON body of the request
+        data = json.loads(request.body)
+        # Retrieve the fields from the request data
+        
+        with transaction.atomic():
+             for item in data:
+                    attribute_code = item.get('attribute')
+                    # print(attribute_code)
+                    # print(Attributes.objects.get(primary_site_code=attribute_code))
+                    attribute = Attributes.objects.get(primary_site_code=site_id)
 
+                    discrepancy = Discrepency(
+                        id=uuid.uuid4(),
+                        primary_site_code=attribute,
+                        audit_date=timezone.now(),  # Assuming you want to set this at save time
+                        auditor_name='Auditor Name Here',  # You should get this from your auth system or the request
+                        discrepancy={
+                            'attribute': item.get('attribute'),
+                            'actual_value': item.get('actualValue'),
+                            'comments': item.get('comments'),
+                            'flag_as_kdi': item.get('flagAsKDI', False),
+                        }
+                    )
+                    discrepancy.save()
+        # site_code = data.get('site_code')
+        # attribute_name = data.get('attribute')
+        # new_value = data.get('new_value')
+        # comments = data.get('comments')
+        # flag_as_kdi = data.get('flagAsKDI', False)
 
+        # Find the corresponding Attribute entry
+        try:
+            attribute = Attributes.objects.get(primary_site_code=site_id)
+        except Attributes.DoesNotExist:
+            return JsonResponse({'error': 'Attributes with this site code does not exist.'}, status=404)
+
+        # Update the AuditLog entry
+        # Discrepency.objects.update_or_create(
+        #     attribute=attribute,
+        #     defaults={
+        #         # 'site_details': attribute.site_details,  # Assuming this is a field in your Attributes model
+        #         'audit_date': timezone.now(),
+        #         'auditor_name': 'Your Auditor Name',  # This should come from the session or the request data
+        #         'discrepancy': {
+        #             'attribute': attribute_name,
+        #             'current_value': attribute.current_value,  # Assuming this is a field in your Attributes model
+        #             'new_value': new_value,
+        #             'comments': comments,
+        #             'flag_as_kdi': flag_as_kdi
+        #         }
+        #     }
+        # )
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'success': 'Audit log updated.'})
+    return JsonResponse({'error': 'Invalid request'}, status=400)

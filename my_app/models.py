@@ -108,3 +108,22 @@ class finalAuditAttribute(models.Model):
 #   discrepancy = models.ForeignKey(Discrepancy, on_delete=models.CASCADE)
 #   induction_mechanism = models.ForeignKey(InductionMechanism, on_delete=models.CASCADE)
 
+from django.db.models import JSONField
+import uuid
+from .models3 import Attributes
+
+
+class Discrepency_audit(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    attribute = models.ForeignKey(Attributes, on_delete=models.CASCADE, related_name='audit_logs_1')
+    # site_details = models.CharField(max_length=255)
+    audit_date = models.DateTimeField()
+    auditor_name = models.CharField(max_length=100)
+    discrepancy = JSONField()
+
+    def __str__(self):
+        return f"{self.site_code} - {self.auditor_name}"
+    
+    class Meta:
+        managed = False
+        db_table = 'Discrepancy_audit'

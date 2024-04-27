@@ -1,7 +1,7 @@
 import React from 'react';
 import './Table.css';
 
-const Table = ({ data, setData }) => {
+const Table = ({ data, setData, onInputChange }) => {
   // Function to handle changes in the 'Actual Value' inputs
   const handleActualValueChange = (index, value) => {
     const updatedData = data.map((item, i) =>
@@ -49,7 +49,8 @@ const Table = ({ data, setData }) => {
                 type="text"
                 className="input"
                 value={item.actualValue}
-                onChange={(e) => handleActualValueChange(index, e.target.value)}
+                // onChange={(e) => handleActualValueChange(index, e.target.value)}
+                onChange={(e) => onInputChange(index, 'actualValue', e.target.value)}
               />
             </td>
             <td className="status-cell">
@@ -63,7 +64,8 @@ const Table = ({ data, setData }) => {
                 type="text"
                 className="input"
                 value={item.comments}
-                onChange={(e) => handleCommentChange(index, e.target.value)}
+                // onChange={(e) => handleCommentChange(index, e.target.value)}
+                onChange={(e) => onInputChange(index, 'comments', e.target.value)}
               />
             </td>
             <td>
@@ -71,7 +73,8 @@ const Table = ({ data, setData }) => {
                 type="checkbox"
                 className="checkbox"
                 checked={item.flagAsKDI}
-                onChange={() => handleFlagAsKDIChange(index)}
+                // onChange={() => handleFlagAsKDIChange(index)}
+                onChange={(e) => onInputChange(index, 'flagAsKDI', e.target.value)}
               />
             </td>
           </tr>

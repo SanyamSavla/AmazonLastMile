@@ -11,7 +11,8 @@ from django.db import models
 
 
 class Attributes(models.Model):
-    primary_site_code = models.CharField(max_length=255, blank=True)
+    # primary_site_code = models.CharField(max_length=255, blank=True)
+    primary_site_code = models.CharField(primary_key=True, max_length=255)
     city = models.CharField(max_length=255, blank=True, null=True)
     state = models.CharField(max_length=255, blank=True, null=True)
     msa = models.CharField(max_length=255, blank=True, null=True)
@@ -73,3 +74,33 @@ class Test(models.Model):
     class Meta:
         managed = False
         db_table = 'test'
+
+
+from django.db.models import JSONField
+import uuid
+
+# class Discrepency(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     attribute = models.ForeignKey(Attributes, on_delete=models.CASCADE, related_name='audit_logs')
+#     # site_details = models.CharField(max_length=255)
+#     audit_date = models.DateTimeField()
+#     auditor_name = models.CharField(max_length=100)
+#     discrepancy = JSONField()
+
+#     def __str__(self):
+#         return f"{self.site_code} - {self.auditor_name}"
+    
+#     class Meta:
+#         managed = False
+#         db_table = 'Discrepancy'
+
+class Discrepency(models.Model):
+    id = models.UUIDField(primary_key=True)
+    primary_site_code = models.ForeignKey(Attributes, models.DO_NOTHING, db_column='primary_site_code', blank=True, null=True)
+    audit_date = models.DateTimeField()
+    auditor_name = models.CharField(max_length=100)
+    discrepancy = models.JSONField()
+
+    class Meta:
+        managed = False
+        db_table = 'discrepancy'

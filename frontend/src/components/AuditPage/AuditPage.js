@@ -19,6 +19,21 @@ const attributeTitles = {
   // ... more mappings as needed
 };
 
+const getModuleDataWithMatchStatus = (moduleData) => {
+  Object.keys(moduleData).forEach(module => {
+    moduleData[module] = moduleData[module].map(item => {
+      const isMatch = item.actualValue && item.currentValue.toString() === item.actualValue.toString();
+      const matchStatus = item.actualValue === '' ? '' : isMatch ? 'Match' : 'Mismatch';
+      // console.log
+      return {
+        ...item,
+        matchStatus: matchStatus
+      };
+    });
+  });
+  return moduleData;
+};
+
 const AuditPage = () => {
   const tabs = ['Inbound', 'Staging', 'Loading', 'Parking', 'Sort'];
   // const [activeTab, setActiveTab] = useState('Inbound');
@@ -27,7 +42,8 @@ const AuditPage = () => {
   const location = useLocation();
   const { siteId } = location.state || {};
   // const [data, setData] = useState([]); 
-  const moduleData = {
+   // eslint-disable-next-line
+  const initialModuleData = {
     Inbound: [
       { attribute: 'induct_mechanism', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
       { attribute: 'package_inbound_truck_type', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
@@ -78,6 +94,7 @@ const AuditPage = () => {
 
   };
 
+  const [moduleData, setModuleData] = useState(initialModuleData);
   const [data, setData] = useState(moduleData[activeModule]);
   // const [data, setData] = useState([
   //   { attribute: 'induct_mechanism', currentValue: 14, actualValue: '', comments: '', flagAsKDI: false },
@@ -107,7 +124,7 @@ const AuditPage = () => {
           throw new Error('Network response was not ok');
         }
         const fetchedData = await response.json();
-        // console.log("fetchedData");
+        console.log("fetchedData",fetchedData);
         // console.log(fetchedData);
         // Update the state with the new values from the fetched data
         // const updatedData = Object.keys(fetchedData).map(key => ({
@@ -119,20 +136,31 @@ const AuditPage = () => {
         // }));
         // console.log(updatedData);
         // setData(updatedData);
-        setData(currentData =>
-          currentData.map(item => ({
-            ...item,
-            currentValue: fetchedData[item.attribute] , // Replace with the new value, or fallback to the current value if undefined
-            // actualValue: fetchedData[item.attribute] || item.actualValue,   // Replace with the new value, or fallback to the current value if undefined
-            // You can add additional fields to update as needed
-          }))
-        );
+        setModuleData(prev => {
+          return Object.keys(prev).reduce((acc, moduleName) => {
+            // console.log(moduleName)
+            acc[moduleName] = prev[moduleName].map(item => ({
+              ...item,
+              currentValue: fetchedData[item.attribute] || item.currentValue, // Assuming the fetched data is structured by module
+            }));
+            // console.log("acc",acc);
+            return acc;
+          }, {});
+        });
+        // setData(currentData =>
+        //   currentData.map(item => ({
+        //     ...item,
+        //     currentValue: fetchedData[item.attribute] , // Replace with the new value, or fallback to the current value if undefined
+        //     // actualValue: fetchedData[item.attribute] || item.actualValue,   // Replace with the new value, or fallback to the current value if undefined
+        //     // You can add additional fields to update as needed
+        //   }))
+        // );
 
       } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
       }
     };fetchData();
-  }, [siteId, setData, activeModule]);
+  }, [siteId]); //, setData, activeModule
   // Handlers for Footer
   const handleHoldDeployment = () => {
     // Logic to hold deployment
@@ -187,11 +215,25 @@ const AuditPage = () => {
       )
     );
   };
-  
+  useEffect(() => {
+    // Sync changes back to the moduleData when 'data' changes
+    setModuleData(prev => ({
+      ...prev,
+      [activeModule]: data,
+    }));
+  }, [data, activeModule]);
+
   const handleSave = async () => {
     // Map your state to the format expected by your API
-     const payload = data.map(item => ({
-      primary_site_code: siteId, // This assumes the siteId is consistent for all items
+    //  const payload = data.map(item => ({
+    //   primary_site_code: siteId, // This assumes the siteId is consistent for all items
+    //   attribute: item.attribute,
+    //   actualValue: item.actualValue,
+    //   comments: item.comments,
+    //   flagAsKDI: item.flagAsKDI,
+    // }));
+    const payload = Object.values(moduleData).flat().map(item => ({
+      primary_site_code: siteId,
       attribute: item.attribute,
       actualValue: item.actualValue,
       comments: item.comments,

@@ -4,6 +4,11 @@ import Navigation from '../Navigation/Navigation'; // Corrected path
 import Table from '../Table/Table'; // Corrected path
 import Footer from '../Footer/Footer'; // Corrected path
 import { useLocation } from 'react-router-dom';
+import { jsPDF } from 'jspdf';
+import JSZip from 'jszip';
+import domtoimage from 'dom-to-image';
+import html2canvas from 'html2canvas';
+
 
 const attributeTitles = {
   induct_mechanism: "Induct Mechanism",
@@ -33,6 +38,8 @@ const getModuleDataWithMatchStatus = (moduleData) => {
   });
   return moduleData;
 };
+
+
 
 const AuditPage = () => {
   const tabs = ['Inbound', 'Staging', 'Loading', 'Parking', 'Sort'];
@@ -109,6 +116,9 @@ const AuditPage = () => {
   //   { attribute: 'inbound_staging_d', currentValue: 24, actualValue: '', comments: '', flagAsKDI: false },
   //   // ... more rows
   // ]);
+ 
+
+
   const handleTabClick = (moduleName) => {
     console.log('Selected module:', moduleName); // Check which module was clicked
     console.log('Data for module:', moduleData[moduleName]); // Log out data for debugging
@@ -169,11 +179,9 @@ const AuditPage = () => {
   // const handleSave = () => {
   //   // Logic to save data
   // };
-
-  const handleComplete = () => {
-    // Logic to mark as complete
+  const handleComplete = async () => {
+    // await exportAllDataToPDF(); // Call the PDF export function directly if it's ready to handle everything
   };
-
   const handleSubmit = async (attributeData) => {
     var csrfToken = getCookie('csrftoken');
     try {
@@ -295,17 +303,82 @@ const AuditPage = () => {
     }
     return cookieValue;
   }
+
+  
+
+  //PDF 
+
+const generatePDF = async () => {
+
+  
+  for (const moduleName of Object.keys(moduleData)) {
+    const element = document.getElementById(`module-${moduleName}`);
+    element.style.display = "block"; 
+    const canvas = await html2canvas(element);
+    
+    // const canvas = await html2canvas(element, {
+    //   scale: 2,
+    //   useCORS: true
+    // });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new  jsPDF({
+      orientation: 'landscape',
+      unit: 'px',
+      format: 'a4'
+    });
+    const imgProps = pdf.getImageProperties(imgData);
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    const date = new Date();
+    const dateString = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`; // Format: YYYYMMDD
+   
+    pdf.save(`${dateString}-Report-${moduleName}.pdf`);
+    element.style.display = 'none';  // Hide the container again
+    // // element.style.visibility = 'hidden';
+    element.style.position = '';
+    element.style.left = '';
+    element.style.top = '';
+    // element.style.display = originalDisplayStyles[moduleName];
+  
+  }
+};
+
   return (
-    <>
+    <> 
+    
       <Header />
       {/* <Navigation tabs={tabs} activeTab={activeTab} setAciiitiveTab={setActiveTab} /> */}
       <Navigation tabs={tabs} activeTab={activeModule} onTabClick={handleTabClick} />
       
-      <div className="content">
+      <div className="content" id="main-content">
+      
+      {tabs.map(tab => (
+      <div className="content" key={tab} id={`module-${tab}`} style={{ display: tab === activeModule ? 'block' : 'none' }}>
         {/* Pass the data array directly to the Table component */}
-        <Table data={data} setData={setData} onInputChange={handleInputChange} />
+        {/* <Table data={data} setData={setData} onInputChange={handleInputChange} /> */}
+        <Table data={moduleData[tab]} setData={(updatedData) => {
+        setModuleData({ ...moduleData, [tab]: updatedData });
+      }} onInputChange={handleInputChange} />
+        
+        </div>
+      ))}
       </div>
-      <Footer handleSave={handleSave}/>
+
+     
+      <button className="button button-primary"  onClick={generatePDF}>Download All Modules as PDF</button>
+   
+      <Footer handleSave={handleSave} handleComplete={handleComplete}/>
+{/* 
+      <div id="pdf-container" style={{ display: 'none', width: '100%', height: 'auto' }}>
+      {Object.keys(moduleData).map(moduleName => (
+        <div key={moduleName}>
+          <h2>{moduleName}</h2>
+          <Table data={moduleData[moduleName]} />
+        </div>
+      ))}
+      </div> */}
     </>
   );
 };

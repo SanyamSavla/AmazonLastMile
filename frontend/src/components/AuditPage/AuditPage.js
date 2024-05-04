@@ -345,6 +345,40 @@ const generatePDF = async () => {
   }
 };
 
+// Sending email :
+
+
+const handleSendEmail = async () => {
+  const dataToEmail = Object.values(moduleData).flat().filter(item => item.flagAsKDI);
+  console.log(dataToEmail);
+  try {
+    const response = await fetch('http://localhost:8000/send-email/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: 'tphoenix318@gmail.com',
+        data: dataToEmail
+      }),
+    });
+    console.log(response)
+    if (!response.ok) {
+      throw new Error('Failed to send email');
+    }
+
+    const result = await response.json();
+    console.log('Email sent:', result);
+    alert('Email sent successfully!');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    alert('Error sending email');
+  }
+};
+
+
   return (
     <> 
     
@@ -368,7 +402,8 @@ const generatePDF = async () => {
 
      
       <button className="button button-primary"  onClick={generatePDF}>Download All Modules as PDF</button>
-   
+      <button onClick={handleSendEmail}>Send Email</button>
+
       <Footer handleSave={handleSave} handleComplete={handleComplete}/>
 {/* 
       <div id="pdf-container" style={{ display: 'none', width: '100%', height: 'auto' }}>

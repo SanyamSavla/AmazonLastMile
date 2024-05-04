@@ -170,7 +170,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CSRF_USE_SESSIONS=False
 CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
     "http://10.19.128.82:3000",
+    # "http://10.18.155.104:3000/",
 ]
 TEMPLATES = [
     {
@@ -258,3 +260,15 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+# In settings.py
+# EMAIL_BACKEND = 'my_app.data_process.MyEmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tphoenix318@gmail.com'
+EMAIL_HOST_PASSWORD = 'tdvy vejh gemb giad'
+EMAIL_USE_SSL = False

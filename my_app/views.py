@@ -14,6 +14,13 @@ from django.utils import timezone
 import json
 from django.http import JsonResponse
 
+
+from django.core.mail import send_mail
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+
+
+
 def home(request):
     # posts = Post.objects.all()
     # return render(request, 'my_app/home.html', {'posts': posts})
@@ -167,3 +174,85 @@ def update_audit_log(request,site_id):
             return JsonResponse({'error': str(e)}, status=500)
         return JsonResponse({'success': 'Audit log updated.'})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+# import io
+# from django.http import JsonResponse
+# from django.core.mail import EmailMessage
+# from reportlab.pdfgen import canvas
+# from reportlab.lib.pagesizes import letter
+# from reportlab.lib import colors
+# from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+
+# def generate_pdf(data):
+#     # Create a file-like buffer to receive PDF data
+#     buffer = io.BytesIO()
+
+#     # Create the PDF object, using the buffer as its "file."
+#     p = canvas.Canvas(buffer, pagesize=letter)
+
+#     # Draw things on the PDF. Here's where the PDF generation happens.
+#     # Let's assume 'data' is a list of dictionaries
+#     y = 750
+#     for item in data:
+#         p.drawString(100, y, f"{item['attribute']}: Current Value: {item['currentValue']} Actual Value: {item['actualValue']}")
+#         y -= 30
+
+#     # Close the PDF object cleanly, and we're done.
+#     p.showPage()
+#     p.save()
+
+#     # File-like buffer to rewind
+#     buffer.seek(0)
+#     return buffer
+
+# def send_audit_report(request):
+#     if request.method == 'POST':
+#         # Assuming JSON data is sent with attribute details
+#         data = request.json['auditData']
+
+#         # Generate PDF
+#         pdf = generate_pdf(data)
+
+#         # Create email
+#         email = EmailMessage(
+#             'Audit Report Completed', 
+#             'Find attached the PDF of the completed audit.', 
+#             'from@example.com', 
+#             ['to@example.com']
+#         )
+
+#         # Attach PDF
+#         email.attach('audit_report.pdf', pdf.read(), 'application/pdf')
+
+#         # Send the email
+#         email.send()
+
+#         return JsonResponse({'status': 'Email sent successfully'})
+#     else:
+#         return JsonResponse({'error': 'Invalid request'}, status=400)
+
+# Sending Email Route:
+
+
+@api_view(['POST'])
+def send_kdi_data(request):
+    try:
+        data = json.loads(request.body)
+        email = data.get('email')
+        kdi_data = data.get('data')
+
+        # Convert the list of dictionaries to a string for the email
+        kdi_data_str = json.dumps(kdi_data, indent=2)
+        print(data,email, kdi_data_str)
+        send_mail(
+            'KDI Data Report',
+            f'Here is your KDI flagged data:\n{kdi_data_str}',
+            'tphoenix318@gmail.com',  # Update with your actual sender email
+            [email],
+            fail_silently=False,
+        )
+        return JsonResponse({"message": "Email sent successfully!"}, status=200)
+    except Exception as e:
+        print(e)
+        return JsonResponse({"error": str(e)}, status=500)

@@ -5,6 +5,7 @@ import AuditPage from './components/AuditPage/AuditPage'; // Update this path if
 import Newpage from './components/Newpage/Newpage'; // This path should be correct
 import './App.css'; // Your global styles
 import SiteIdForm from './components/Home/home'; // This path should be correct
+import AdminOverview from './components/AdminOverview/AdminOverview'; // This path should be correct
 
 
 
@@ -42,6 +43,8 @@ const App = () => {
           <Route exact path="/" element={<AuditPage /> } />
           <Route path="/new_start" element={<Newpage />} />
           <Route path="/home" element={<SiteIdForm />} />
+          <Route path="/admin" element={<AdminOverview />} />
+
           {/* Add other routes here if needed */}
         </Routes>
       </div>

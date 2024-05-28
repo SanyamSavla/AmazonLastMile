@@ -215,11 +215,6 @@ DATABASES = {
     }
 }
 
-## 
-#aws access key- AKIAZI2LFLFOWRWJLPGO
-# secret access key- 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
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

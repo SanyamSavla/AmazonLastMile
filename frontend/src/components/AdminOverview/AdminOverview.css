@@ -1,0 +1,70 @@
+.admin-overview {
+    padding: 20px;
+  }
+  
+  .sub-nav {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .sub-nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sub-nav li {
+    display: inline;
+    margin-right: 15px;
+    cursor: pointer;
+  }
+  
+  .sub-nav li.active {
+    font-weight: bold;
+    border-bottom: 2px solid #0074D9;
+  }
+  
+  .search-site {
+    margin-bottom: 20px;
+  }
+  
+  .filter-by {
+    margin-bottom: 20px;
+  }
+  
+  .filter-by h3, .filter-by h4 {
+    margin: 10px 0;
+  }
+  
+  .filter-by ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .site-cards {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .site-card {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    flex: 1 0 30%; 
+  }
+  
+  .kdi-tracker table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .kdi-tracker th, .kdi-tracker td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .kdi-tracker th {
+    background-color: #f4f4f4;
+  }

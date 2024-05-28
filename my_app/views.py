@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
 from django.http import JsonResponse
-from .models3 import Attributes,Discrepency
+from .models3 import Attributes,Discrepency,AuditSessions
 from django.db import connection
 
 from django.shortcuts import redirect
@@ -18,8 +18,10 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import default_storage
+from django.core.mail import EmailMessage
 
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def home(request):
     # posts = Post.objects.all()
@@ -35,6 +37,81 @@ def home(request):
         return JsonResponse({'error': 'No attribute found with the provided site ID'}, status=404)
     
     # return HttpResponse("hello")
+
+def get_or_none(model, **kwargs):
+    try:
+        return model.objects.get(**kwargs)
+    except model.DoesNotExist:
+        return None
+
+@api_view(['GET'])
+def fetchDiscrepency(request):
+    print("here")
+    try:
+        # Pagination settings
+        page = request.GET.get('page', 1)
+        per_page = request.GET.get('per_page', 40)
+        discrepancies = Discrepency.objects.all()
+        data = []   
+        paginator = Paginator(discrepancies, per_page)
+        try:
+            discrepancies_page = paginator.page(page)
+        except PageNotAnInteger:
+            discrepancies_page = paginator.page(1)
+        except EmptyPage:
+            discrepancies_page = paginator.page(paginator.num_pages)
+        # print(discrepancies
+
+        for discrepancy in discrepancies_page:
+        # for discrepancy in discrepancies:
+            d=discrepancy.primary_site_code.primary_site_code
+            print(d)
+            primary_site_code = discrepancy.primary_site_code  # Assuming this is a ForeignKey to an Attributes model
+            site_id = primary_site_code.primary_site_code  # Adjust this if `site_id` is the correct field in Attributes
+
+            print(f"Primary site code: {site_id}")
+            try:
+                # audit_session = AuditSessions.objects.get(site_id=site_id)
+                audit_session = AuditSessions.objects.filter(site_id=site_id).first()
+                print(f"Found audit session for site_id {site_id}")
+                print("audit,",audit_session)
+                discrepancy_data = discrepancy.discrepancy  # Assuming this is a JSON field
+               
+
+                data.append({
+                    'site_id': audit_session.site_id,
+                    'attribute_logs': discrepancy_data.get('attribute', 'N/A'),
+                    'audit_date': discrepancy.audit_date.strftime('%Y-%m-%d'),
+                    'auditor_name': f"{audit_session.auditor_first_name}, {audit_session.auditor_last_name}",
+                    'existing_value': discrepancy_data.get('existing_value', 'N/A'),
+                    'location': f"{audit_session.city}, {audit_session.state}",
+                    'new_value': discrepancy_data.get('actual_value', 'N/A')
+                })
+                print(data)
+            except AuditSessions.DoesNotExist:
+                # Handle the case where there is no corresponding audit session
+                data.append({
+                    'site_id': discrepancy.primary_site_code,
+                    'attribute_logs': discrepancy_data.get('attribute', 'N/A'),
+                    'audit_date': discrepancy.audit_date.strftime('%Y-%m-%d'),
+                    'auditor_name': discrepancy.auditor_name,
+                    'existing_value': discrepancy_data.get('existing_value', 'N/A'),
+                    'location': 'N/A',
+                    'new_value': discrepancy_data.get('new_value', 'N/A')
+                })
+                print(data)
+            response = {
+            'data': data,
+            'page': discrepancies_page.number,
+            'pages': paginator.num_pages,
+            'per_page': per_page,
+            'total': paginator.count
+        }
+        return JsonResponse(response, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    
+
 
 @swagger_auto_schema(
     method='get',
@@ -82,6 +159,36 @@ def get_users(request,site_id):
 def handle_site_id(request,site_id):
     # print(request)
     # print("s",site_id)
+    data = json.loads(request.body)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        with transaction.atomic():
+            for item in data:
+                auditor_first_name = item.get('auditor_first_name')
+                auditor_last_name = item.get('auditor_last_name')
+                site_code = item.get('site_code')
+                site_type = item.get('site_type')
+                city = item.get('city')
+                state = item.get('state')
+                review_type = item.get('review_type')
+                review_date = item.get('review_date')
+                
+                audit_session = AuditSessions(
+                    id=uuid.uuid4(),
+                    auditor_first_name=auditor_first_name,
+                    auditor_last_name=auditor_last_name,
+                    site_code=site_code,
+                    site_type=site_type,
+                    city=city,
+                    state=state,
+                    review_type=review_type,
+                    # review_date=review_date,
+                    site_id=site_id
+                )
+                audit_session.save()
+
+        # return Response({'success': True}, status=status.HTTP_201_CREATED)
+
     with connection.cursor() as cursor:
          try:
               cursor.execute('SELECT * FROM attributes WHERE primary_site_code= %s',[site_id] )
@@ -235,24 +342,88 @@ def update_audit_log(request,site_id):
 # Sending Email Route:
 
 
+
+def convert_data_to_html_table(kdi_data):
+    table_header = """
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                <th>Current Value</th>
+                <th>Actual Value</th>
+                <th>Comments</th>
+                <th>Flag as KDI</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
+
+    table_rows = ""
+    for item in kdi_data:
+        table_rows += f"""
+        <tr>
+            <td>{item.get('attribute', '')}</td>
+            <td>{item.get('currentValue', '')}</td>
+            <td>{item.get('actualValue', '')}</td>
+            <td>{item.get('comments', '')}</td>
+            <td>{item.get('flagAsKDI', False)}</td>
+        </tr>
+        """
+
+    table_footer = """
+        </tbody>
+    </table>
+    """
+
+    return table_header + table_rows + table_footer
+
+
 @api_view(['POST'])
 def send_kdi_data(request):
+    print("here?")
+    print(request)
     try:
-        data = json.loads(request.body)
+        # data = json.loads(request.body)2
+        data=request.POST
         email = data.get('email')
-        kdi_data = data.get('data')
-
+        print(email)
+        pdf = request.FILES['pdf']
+        # print(pdf)
+        # kdi_data = data.get('data')
+        data_blob = request.FILES.get('data')
+        print(data_blob)
+        # kdi_data = json.loads(request.POST.get('data'))
+        kdi_data = json.loads(data_blob.read())
+        # file_path = default_storage.save(pdf.name, pdf)
+        
         # Convert the list of dictionaries to a string for the email
         kdi_data_str = json.dumps(kdi_data, indent=2)
+        kdi_data_html = convert_data_to_html_table(kdi_data)
+        print("here")
         print(data,email, kdi_data_str)
-        send_mail(
+        # send_mail(
+        #     'KDI Data Report',
+        #    f'<p>Here is your KDI flagged data:</p>{kdi_data_html}',
+        #     'tphoenix318@gmail.com',  # Update with your actual sender email
+        #     [email],
+        #     fail_silently=False,
+        # )
+        email_message = EmailMessage(
             'KDI Data Report',
-            f'Here is your KDI flagged data:\n{kdi_data_str}',
+            f'Here is your KDI flagged data:\n{kdi_data_html}',
             'tphoenix318@gmail.com',  # Update with your actual sender email
             [email],
-            fail_silently=False,
         )
+        email_message.content_subtype = "html"
+
+        # Attach the PDF file to the email
+        # with open(file_path, 'rb') as f:
+        #     email_message.attach(pdf.name, f.read(), 'application/zip')
+        # email_message.attach(pdf.name, pdf.read(), pdf.content_type)
+        email_message.send()
+        
         return JsonResponse({"message": "Email sent successfully!"}, status=200)
     except Exception as e:
         print(e)
+        # print(traceback.format_exc())
         return JsonResponse({"error": str(e)}, status=500)

@@ -8,6 +8,7 @@ from .views import send_kdi_data
 app_name = 'my_app'
 urlpatterns = [
     path('', views.home, name='home'),
+    path('admin', views.fetchDiscrepency),
     path('get/<str:site_id>/', views.get_users, name='get'),
     path('post/<str:site_id>/', views.handle_site_id),
     path('discrepancy/<str:site_id>', views.update_audit_log),

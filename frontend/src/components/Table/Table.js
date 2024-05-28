@@ -1,5 +1,8 @@
 import React from 'react';
 import './Table.css';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+ // eslint-disable-next-line
 
 const Table = ({ data, setData, onInputChange }) => {
   // Function to handle changes in the 'Actual Value' inputs
@@ -25,7 +28,21 @@ const Table = ({ data, setData, onInputChange }) => {
     );
     setData(updatedData);
   };
+  // const renderStatusIcon = (status) => {
+  //   switch (status) {
+  //     case 'Match':
+  //       return <FontAwesomeIcon icon={faCheck} className="text-success" />;
+  //     case 'Mismatch':
+  //       return <FontAwesomeIcon icon={faTimes} className="text-danger" />;
+  //     default:
+  //       return ''; // Empty string for empty or undefined status
+  //   }
+  // };
+  // const [isChecked, setIsChecked] = useState(false);
 
+  // const toggleCheckbox = () => {
+  //   setIsChecked(!isChecked);
+  // };
   return (
     <table className="audit-table">
       <thead>
@@ -33,8 +50,8 @@ const Table = ({ data, setData, onInputChange }) => {
           <th>Attribute</th>
           <th>Current Value</th>
           <th>Actual Value</th>
-          <th>Match Status</th>
-          <th>Audit Score</th>
+          {/* <th>Match Status</th> */}
+          {/* <th>Audit Score</th> */}
           <th>Comments</th>
           <th>Flag as KDI</th>
         </tr>
@@ -42,7 +59,7 @@ const Table = ({ data, setData, onInputChange }) => {
       <tbody>
         {data.map((item, index) => (
           <tr key={index}>
-            <td>{item.attribute}</td>
+            <td>{item.displayName}</td>
             <td>{item.currentValue}</td>
             <td>
               <input
@@ -53,12 +70,14 @@ const Table = ({ data, setData, onInputChange }) => {
                 onChange={(e) => onInputChange(index, 'actualValue', e.target.value)}
               />
             </td>
-            <td className="status-cell">
+            {/* <td className="status-cell">
               {item.matchStatus ? '✔️' : ''}
             </td>
             <td className="score-cell">
               {item.auditScore || ''}
-            </td>
+            </td> */}
+            {/* <td>{renderStatusIcon(item.matchStatus)}</td> */}
+
             <td>
               <input
                 type="text"
@@ -68,14 +87,25 @@ const Table = ({ data, setData, onInputChange }) => {
                 onChange={(e) => onInputChange(index, 'comments', e.target.value)}
               />
             </td>
-            <td>
+            {/* <td>
               <input
                 type="checkbox"
                 className="checkbox"
                 checked={item.flagAsKDI}
                 // onChange={() => handleFlagAsKDIChange(index)}
-                onChange={(e) => onInputChange(index, 'flagAsKDI', e.target.value)}
+                // onChange={(e) => onInputChange(index, 'flagAsKDI', e.target.value)}
+                onChange={(e) => onInputChange(index, 'flagAsKDI', e.target.checked)}
+
               />
+            </td> */}
+            <td>
+              {['pick_cart_staging', 'pickcartsperroute', 'inductstations_manual','induct_stations_asl','loading_spots','manualfingers','adtafingers',].includes(item.attribute) && (
+                <input
+                  type="checkbox"
+                  checked={item.flagAsKDI}
+                  onChange={(e) => onInputChange(index, 'flagAsKDI', e.target.checked)}
+                />
+              )}
             </td>
           </tr>
         ))}

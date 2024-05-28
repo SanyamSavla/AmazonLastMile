@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './Header.css'; // make sure to create a Header.css file for styling
 import { useLocation } from 'react-router-dom';
 // const location = useLocation();
-
+import logo from './logo.png'; 
 const Header = () => {
   const location = useLocation();
   const { siteId } = location.state || {};
@@ -28,7 +28,7 @@ const Header = () => {
     <div className="header">
       <div className="logo-container">
         {/* Insert Amazon logo image here. Replace `logo.png` with the path to your logo file. */}
-        <img src="/Users/siddharthpurohit/logo.png" alt="Amazon" className="logo" />
+        <img src={logo} alt="Amazon" className="logo" />
       </div>
       <nav className="navigation-items">
         <ul>

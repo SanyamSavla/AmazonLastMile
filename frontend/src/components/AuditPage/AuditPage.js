@@ -52,51 +52,51 @@ const AuditPage = () => {
    // eslint-disable-next-line
   const initialModuleData = {
     Inbound: [
-      { attribute: 'induct_mechanism', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'package_inbound_truck_type', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'package_unload_medium', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'dockdoorsinbound', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'dockdoorsgocartreturn', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'dockdoorspalletremoval', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'induct_stations_asl', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'inductstations_manual', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'inbound_staging', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'inbound_staging_d', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Induct Mechanism',attribute: 'induct_mechanism', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      {displayName: 'Package Inbound Truck Type',attribute: 'package_inbound_truck_type', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Package Unload Medium',attribute: 'package_unload_medium', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Dock Doors Inbound',attribute: 'dockdoorsinbound', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Dock Doors Go Cart Return',attribute: 'dockdoorsgocartreturn', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Dock Doors Pallet Removal',attribute: 'dockdoorspalletremoval', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Induct Stations ASL',attribute: 'induct_stations_asl', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Induct Stations Manual',attribute: 'inductstations_manual', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      {displayName: 'Induct Staging', attribute: 'inbound_staging', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Induct Staging D',attribute: 'inbound_staging_d', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
    ],
     Staging: [
-      { attribute: 'wavesfordispatchstaging', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'pickcartsperroute', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'pick_cart_staging', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Waves for Dispatch',attribute: 'wavesfordispatchstaging', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      {displayName: 'Pick carts per route', attribute: 'pickcartsperroute', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Pick cart Staging',attribute: 'pick_cart_staging', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
     ],
     Loading: [
-      { attribute: 'loadingtype', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'loadingside', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'loadoutdooratgrade', currentValue: '',actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'canopyoverlaunchpads', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'demisingwallinpickstagearea', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'number_of_launchpads', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'loading_spots', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'queueing_spots', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'queueing_spots_for_parking', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'associate_parking_ratio', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'queueing_spots', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Loading Type', attribute: 'loadingtype', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      {displayName: 'Loading Side', attribute: 'loadingside', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Load out Door at Grade',attribute: 'loadoutdooratgrade', currentValue: '',actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Canopy over Launchpads',attribute: 'canopyoverlaunchpads', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Demising Wall in Picks',attribute: 'demisingwallinpickstagearea', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Number of Launchpads',attribute: 'number_of_launchpads', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Loading Spots',attribute: 'loading_spots', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Queuing Spots',attribute: 'queueing_spots', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Queuing Spots Park',attribute: 'queueing_spots_for_parking', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Associate Parking ratio',attribute: 'associate_parking_ratio', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Queuing Spots',attribute: 'queueing_spots', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
     
     
     ],
     Parking: [
-      { attribute: 'vanparkingconfigurationonsite', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'total_van_parking_designed', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'total_personal_parking_designed', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Van Parking Configuration ', attribute: 'vanparkingconfigurationonsite', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      {displayName: 'Total Van parking Designed', attribute: 'total_van_parking_designed', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Total Personal parking Designed', attribute: 'total_personal_parking_designed', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
     ],
     Sort: [
-      { attribute: 'design_labor_ratio', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'sort_zones_per_row', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'systemfph', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'designpeakspr', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'designpeakspr_co', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'totalhconsite', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'manualfingers', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
-      { attribute: 'adtafingers', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      {displayName: 'Design Labor ratio', attribute: 'design_labor_ratio', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Sort zones per row', attribute: 'sort_zones_per_row', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'System_fph', attribute: 'systemfph', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Design Peaks pr',attribute: 'designpeakspr', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Design Peaks PRCo',attribute: 'designpeakspr_co', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Total_h_conSite',attribute: 'totalhconsite', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      {displayName: 'Manual fingers', attribute: 'manualfingers', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
+      { displayName: 'Adta Fingers',attribute: 'adtafingers', currentValue: '', actualValue: '', comments: '', flagAsKDI: false },
     ],
 
   };
@@ -216,20 +216,35 @@ const AuditPage = () => {
   const [formData, setFormData] = useState({});
 
   const handleInputChange = (index, field, value) => {
-    // Update the specific item by index
     setData(currentData =>
       currentData.map((item, itemIndex) =>
-        index === itemIndex ? { ...item, [field]: value } : item
+        index === itemIndex ? { ...item, [field]: value, flagAsKDI: field === 'actualValue' && item.currentValue !== value } : item
       )
     );
   };
+
   useEffect(() => {
-    // Sync changes back to the moduleData when 'data' changes
     setModuleData(prev => ({
       ...prev,
       [activeModule]: data,
     }));
   }, [data, activeModule]);
+
+  // const handleInputChange = (index, field, value) => {
+  //   // Update the specific item by index
+  //   setData(currentData =>
+  //     currentData.map((item, itemIndex) =>
+  //       index === itemIndex ? { ...item, [field]: value } : item
+  //     )
+  //   );
+  // };
+  // useEffect(() => {
+  //   // Sync changes back to the moduleData when 'data' changes
+  //   setModuleData(prev => ({
+  //     ...prev,
+  //     [activeModule]: data,
+  //   }));
+  // }, [data, activeModule]);
 
   const handleSave = async () => {
     // Map your state to the format expected by your API
@@ -268,6 +283,7 @@ const AuditPage = () => {
       // Handle success response
       const result = await response.json();
       console.log(result);
+      alert('Saved to the Database!');
       // TODO: Add any post-save actions here, e.g., notifications to the user
       
     } catch (error) {
@@ -345,6 +361,90 @@ const generatePDF = async () => {
   }
 };
 
+
+//blob:
+// const generatePDFBlob = async () => {
+//   const pdf = new  jsPDF({
+//     orientation: 'landscape',
+//     unit: 'px',
+//     format: 'a4'
+//   });
+  
+//   for (const moduleName of Object.keys(moduleData)) {
+//     const element = document.getElementById(`module-${moduleName}`);
+//     element.style.display = "block"; 
+//     const canvas = await html2canvas(element);
+    
+//     const imgData = canvas.toDataURL('image/png');
+//     const pdf = new jsPDF({
+//       orientation: 'landscape',
+//       unit: 'px',
+//       format: 'a4'
+//     });
+//     const imgProps = pdf.getImageProperties(imgData);
+//     const pdfWidth = pdf.internal.pageSize.getWidth();
+//     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+//     // pdf.addPage();
+//     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+//     const date = new Date();
+//     const dateString = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`; // Format: YYYYMMDD
+//     pdf.save(`${dateString}-Report-${moduleName}.pdf`);
+//     // const pdfBlob = pdf.output('blob');
+//     // zip.file(`${dateString}-Report-${moduleName}.pdf`, pdfBlob);
+//     element.style.display = 'none';
+//     element.style.position = '';
+//     element.style.left = '';
+//     element.style.top = '';
+//   }
+
+//   // const zipBlob = await zip.generateAsync({ type: 'blob' });
+//   // return zipBlob;
+//   const pdfBlob = pdf.output('blob');
+//   return pdfBlob;
+
+  
+// };
+const generatePDFBlob = async () => {
+  const pdf = new jsPDF({
+    orientation: 'landscape',
+    unit: 'px',
+    format: 'a4'
+  });
+
+  for (const moduleName of Object.keys(moduleData)) {
+    const element = document.getElementById(`module-${moduleName}`);
+    const originalDisplay = element.style.display;
+    const originalPosition = element.style.position;
+    const originalLeft = element.style.left;
+    const originalTop = element.style.top;
+
+    element.style.display = "block"; 
+    element.style.position = 'absolute';
+    element.style.left = '-9999px';
+    element.style.top = '0';
+
+    const canvas = await html2canvas(element);
+    const imgData = canvas.toDataURL('image/png');
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    
+    if (moduleName !== Object.keys(moduleData)[0]) {
+      pdf.addPage();
+    }
+    
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    
+    element.style.display = originalDisplay;
+    element.style.position = originalPosition;
+    element.style.left = originalLeft;
+    element.style.top = originalTop;
+  }
+
+  return pdf.output('blob');
+};
+
+
 // Sending email :
 
 
@@ -352,19 +452,30 @@ const handleSendEmail = async () => {
   const dataToEmail = Object.values(moduleData).flat().filter(item => item.flagAsKDI);
   console.log(dataToEmail);
   try {
+      const pdfBlob = await generatePDFBlob();
+      console.log(pdfBlob);
+      const formData = new FormData();
+      // formData.append('pdf', pdfBlob, 'Report.zip');
+      formData.append('email', 'tphoenix318@gmail.com'); // Change this to the recipient's email
+      // formData.append('data', dataToEmail);
+      formData.append('data', new Blob([JSON.stringify(dataToEmail)], { type: 'application/json' }));
+      // const pdfBlob = await generatePDF();
+      formData.append('pdf', pdfBlob, 'report.pdf');
+      
     const response = await fetch('http://localhost:8000/send-email/', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+       
         'X-CSRFToken': getCookie('csrftoken'),
       },
       credentials: 'include',
-      body: JSON.stringify({
-        email: 'tphoenix318@gmail.com',
-        data: dataToEmail
-      }),
+      // body: JSON.stringify({
+      //   email: 'tphoenix318@gmail.com',
+      //   data: dataToEmail
+      // }),
+      body:formData
     });
-    console.log(response)
+    console.log(response);
     if (!response.ok) {
       throw new Error('Failed to send email');
     }
@@ -402,7 +513,7 @@ const handleSendEmail = async () => {
 
      
       <button className="button button-primary"  onClick={generatePDF}>Download All Modules as PDF</button>
-      <button onClick={handleSendEmail}>Send Email</button>
+      <button className="button button-danger" onClick={handleSendEmail}>Send Email</button>
 
       <Footer handleSave={handleSave} handleComplete={handleComplete}/>
 {/* 

@@ -104,3 +104,20 @@ class Discrepency(models.Model):
     class Meta:
         managed = False
         db_table = 'discrepancy'
+
+
+class AuditSessions(models.Model):
+    id = models.UUIDField(primary_key=True)
+    auditor_first_name = models.CharField(max_length=255)
+    auditor_last_name = models.CharField(max_length=255)
+    site_code = models.CharField(max_length=255)
+    site_type = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    review_type = models.CharField(max_length=255)
+    review_date = models.DateField()
+    site_id = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'auditors'

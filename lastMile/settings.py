@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure--f+k*ef4j&t#u64r5)3kdsxtjx@ha_&vas7e80ekiocd2vic6u
 # SECRET_KEY = os.environ.get("RDS_SECRET_NAME")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['10.19.128.82', 'localhost', '127.0.0.1',"*"]
 

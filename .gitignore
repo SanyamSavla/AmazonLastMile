@@ -1,0 +1,98 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Django specific
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/  # If you handle uploads
+staticfiles/  # If you use collectstatic
+
+# Configuration files containing sensitive information
+.env
+.env.*
+*.pem
+*.key
+*.json
+
+# Database
+*.sql
+*.db
+
+# Backup files
+*.bak
+
+# If using Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Development tools
+/.vscode/
+/.idea/
+*.swp
+*.swo
+*.sublime*
+
+# Node.js
+/node_modules/
+
+# Python environments
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual Studio Code
+.vscode/
+
+# AWS CLI
+.aws/
+
+# Elasticsearch logs
+/logs/
+
+# Profile data
+*.profile
+
+# Mac files
+.DS_Store
